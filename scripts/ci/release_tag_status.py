@@ -26,6 +26,7 @@ import yaml
 REPOSITORY = Path(__file__).resolve().parents[2]
 WORKFLOWS = REPOSITORY / ".github/workflows"
 NON_VALIDATION = {
+    "stab-mps-release.yml": "Builds and publishes the fork's plugin, independently of upstream release validation.",
     "dependency-review.yml": "Reviews dependency diffs rather than validating the whole commit.",
     "julia-update-hash.yml": "Opens a build-hash update PR rather than validating the tag.",
     "trunk-ci-issues.yml": "Writes CI tracking issues rather than validating the commit.",
