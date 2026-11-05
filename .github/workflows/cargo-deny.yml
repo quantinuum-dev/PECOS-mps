@@ -23,13 +23,11 @@ on:
       - '**/Cargo.lock'
       - 'deny.toml'
       - '.github/workflows/cargo-deny.yml'
-  schedule:
-    - cron: "47 4 * * *"
   workflow_dispatch:
 
 concurrency:
   # Pull requests cancel superseded runs. Every other event (a push to a main
-  # branch, a schedule, a dispatch) gets its own group so no trunk commit loses
+  # branch or a dispatch) gets its own group so no trunk commit loses
   # its validation or cache save to a later merge.
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: true

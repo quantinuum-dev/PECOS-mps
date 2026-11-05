@@ -49,6 +49,7 @@ WORKFLOWS = (
     "selene-plugins.yml",
     "test-docs-examples.yml",
 )
+# Simulate the former daily coverage to retain tests of missing-run handling.
 DAILY = (
     "cargo-deny.yml",
     "codeql.yml",
@@ -316,7 +317,7 @@ class Tracker:
         expected: list[list[str]],
         *,
         code: int = 0,
-        daily_workflows: tuple[str, ...] | None = None,
+        daily_workflows: tuple[str, ...] | None = DAILY,
     ) -> subprocess.CompletedProcess:
         for args in expected:
             # A test can inject a failure for an expected mutation too.
@@ -324,7 +325,7 @@ class Tracker:
         self.prepare()
         script = ROOT / "scripts/ci/trunk-ci-issues.sh"
         if daily_workflows is not None:
-            # Simulate future daily coverage in a private copy; the real list
+            # Simulate daily coverage in a private copy; the real list
             # and its YAML sync test remain untouched, including under xdist.
             source, count = re.subn(
                 r"^daily_workflows=\([^)]*\)",
@@ -721,7 +722,7 @@ def test_api_budget(tracker: Tracker, recent_count: int, all_daily: bool, stale:
             if workflow == "dependency-integrity-check.yml" and page == 1:
                 history[0] = run_object(event="schedule")
             tracker.runs(legacy, history if page <= 3 else [])
-    tracker.check([], daily_workflows=daily if all_daily else None)
+    tracker.check([], daily_workflows=daily)
     count = len(tracker.api_calls())
     extra = len(daily) if stale else 0
     bound = capacity * 3 + 3 + 25 + recent_count + 2 + 1 + 4 + extra
@@ -846,7 +847,12 @@ def test_daily_workflows_match_watched_daily_crons() -> None:
     daily = script_array("daily_workflows")
     assert len(daily) == len(set(daily))
     assert set(daily) == expected
-    assert set(DAILY) == expected
+
+
+def test_disabled_schedules_do_not_report_missing_runs(tracker: Tracker) -> None:
+    for workflow in DAILY:
+        tracker.runs(nightly_api(workflow), [run_object(event="schedule", created=OLD)])
+    tracker.check([], daily_workflows=None)
 
 
 @pytest.mark.parametrize("kind", ["push", "schedule", "release"])

@@ -11,13 +11,11 @@ on:
     branches: [ "main", "master", "development", "dev" ]
   pull_request:
     branches: [ "main", "master", "development", "dev" ]
-  schedule:
-    - cron: "59 4 * * *"
   workflow_dispatch:
 
 concurrency:
   # Pull requests cancel superseded runs. Every other event (a push to a main
-  # branch, a schedule, a dispatch) gets its own group so no trunk commit loses
+  # branch or a dispatch) gets its own group so no trunk commit loses
   # its validation or cache save to a later merge.
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: true
@@ -35,8 +33,8 @@ jobs:
       fail-fast: false
       matrix:
         # Rust analysis takes about 25 minutes, the longest required check on a
-        # pull request, so it runs on branch/tag pushes, the daily schedule and
-        # dispatch, not on pull requests.
+        # pull request, so it runs on branch/tag pushes and manual
+        # dispatches, not on pull requests.
         include: >-
           ${{ fromJSON(github.event_name == 'pull_request'
           && '[{"language":"actions","build-mode":""},{"language":"c-cpp","build-mode":"none"},{"language":"python","build-mode":""}]'

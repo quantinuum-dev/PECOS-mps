@@ -2,21 +2,15 @@ name: Trunk CI issues
 
 # Opens an issue when a workflow is red on a main branch, or when dev has open
 # high-severity code scanning alerts, and closes it once that clears
-# (scripts/ci/trunk-ci-issues.sh). It polls on a schedule instead of reacting
-# to other workflows' completion events, a privileged trigger that the
-# dependency integrity check rejects.
+# (scripts/ci/trunk-ci-issues.sh). Runs on branch pushes and manual dispatches.
 
 permissions:
   contents: read
 
 on:
-  # GitHub delays and drops scheduled runs under load (one of the first thirteen
-  # hourly runs fired), so every merge also runs the tracker. It reads the
-  # latest completed runs, so a merge reports what earlier merges left red.
+  # Read the latest completed runs so a merge reports what earlier merges left red.
   push:
     branches: [ "main", "master", "development", "dev" ]
-  schedule:
-    - cron: "17 * * * *"
   workflow_dispatch:
 
 concurrency:

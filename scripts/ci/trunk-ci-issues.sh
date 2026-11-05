@@ -61,27 +61,8 @@ superseded_ok=(julia-release.yml python-release.yml)
 # The change time is the committer date of the last commit touching the file,
 # which is the landing time for squash and rebase merges but the original
 # commit time for a merge commit.
-daily_workflows=(
-  cargo-deny.yml
-  codeql.yml
-  cuda-build-check.yml
-  dependency-integrity-check.yml
-  github-actions-security.yml
-  julia-release.yml
-  julia-test.yml
-  julia-version-consistency.yml
-  nightly.yml
-  osv-scanner.yml
-  pre-commit.yml
-  python-release.yml
-  python-test.yml
-  python-version-consistency.yml
-  rust-test.yml
-  rust-version-consistency.yml
-  selene-general-noise-semantics.yml
-  selene-plugins.yml
-  test-docs-examples.yml
-)
+# Scheduled triggers are disabled, so no missing-run checks are expected.
+daily_workflows=()
 now="$(date -u -d "${TRUNK_CI_NOW:-now}" +%s)"
 nightly_cutoff=$((now - 36 * 60 * 60))
 release_cutoff=$((now - 14 * 24 * 60 * 60))

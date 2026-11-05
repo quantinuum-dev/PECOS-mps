@@ -38,15 +38,11 @@ on:
       sha:
         description: Commit SHA
         type: string
-  # Measured 5-9 h delays shift this stagger outside working hours;
-  # spread runner demand across the repository's five macOS slots.
-  schedule:
-    - cron: "7 20 * * *"
 
 concurrency:
   # Finish a started build: cancelling it on each merge threw away 49-minute
   # Intel and 27-minute arm macOS builds. A newer push still replaces an older
-  # pending one. Schedules and manual dispatches get their own groups so a
+  # pending one. Manual dispatches get their own groups so a
   # merge cannot drop their validation while they wait.
   group: ${{ github.workflow }}-${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.run_id || github.ref }}
   cancel-in-progress: false
@@ -73,7 +69,7 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
         run: |
-          # Branch/tag pushes, schedules and dispatches all validate the full matrix.
+          # Branch/tag pushes and dispatches all validate the full matrix.
           if [ "$EVENT_NAME" != "pull_request" ]; then
             echo "full_release=true" >> $GITHUB_OUTPUT
           else

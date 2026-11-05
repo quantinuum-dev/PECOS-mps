@@ -24,8 +24,6 @@ on:
       - 'Justfile'
       - '.github/workflows/test-docs-examples.yml'
   workflow_dispatch:
-  schedule:
-    - cron: "11 4 * * *"
 
 env:
   RUSTFLAGS: -C debuginfo=0

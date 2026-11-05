@@ -24,8 +24,6 @@ on:
     types: [opened, synchronize, reopened, labeled, unlabeled]
     branches: [ "main", "master", "development", "dev" ]
   workflow_dispatch:
-  schedule:
-    - cron: "39 5 * * *"
 
 jobs:
   julia-changes:

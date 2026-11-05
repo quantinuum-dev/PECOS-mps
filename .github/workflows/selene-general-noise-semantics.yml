@@ -6,12 +6,10 @@ permissions:
 on:
   push:
     tags: [ "py-*", "jl-*", "rs-*" ]
-  schedule:
-    - cron: "17 7 * * *"
   workflow_dispatch:
 
 concurrency:
-  # Every non-PR run keeps its validation, including schedules and dispatches.
+  # Every non-PR run keeps its validation, including dispatches.
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: true
 

@@ -21,11 +21,8 @@ env:
 on:
   push:
     tags: [ "py-*", "jl-*", "rs-*" ]
-  schedule:
-    - cron: "37 6 * * *"
   workflow_dispatch:
-  # A pull request that edits this workflow runs it, since a scheduled
-  # workflow is otherwise first exercised after it merges.
+  # Validate workflow changes before they merge.
   pull_request:
     branches: [ "main", "master", "development", "dev" ]
     paths:

@@ -44,15 +44,11 @@ on:
       sha:
         description: Commit SHA to build (manual runs build and test; only a jl-* tag push publishes)
         type: string
-  # Measured 5-9 h delays shift this stagger outside working hours;
-  # spread runner demand across the repository's five macOS slots.
-  schedule:
-    - cron: "7 19 * * *"
 
 concurrency:
   # Pull requests cancel superseded runs. Elsewhere a started build finishes
   # (cancelling it on each merge threw away the macOS builds) and a newer push
-  # replaces only an older pending one; schedules and manual dispatches get
+  # replaces only an older pending one; manual dispatches get
   # their own groups so a merge cannot drop their validation while they wait.
   # Unrelated label events must not cancel an active run.
   group: ${{ github.workflow }}-${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.run_id || github.ref }}-${{ (github.event.action == 'labeled' || github.event.action == 'unlabeled') && github.event.label.name != 'ci:julia' && github.run_id || 'validation' }}
@@ -90,7 +86,7 @@ jobs:
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
           TRIGGER_ON_PR_PUSH_VALUE: ${{ env.TRIGGER_ON_PR_PUSH }}
         run: |
-          # Branch/tag pushes, schedules and dispatches validate the full matrix.
+          # Branch/tag pushes and dispatches validate the full matrix.
           # Only a jl-* tag push can enter publish_release.
           if [ "$EVENT_NAME" != "pull_request" ]; then
             echo "run=true" >> $GITHUB_OUTPUT

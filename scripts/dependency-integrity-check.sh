@@ -79,9 +79,8 @@ step_input_value() {
 #   - GitHub Security advisories / GitHub blog incident write-ups
 #   - CISA alerts (https://www.cisa.gov/news-events/alerts)
 #   - StepSecurity / Socket / OpenSSF campaign IoC reports
-# The daily scheduled run of this check (see dependency-integrity-check.yml)
-# exercises the lists against the whole tree, so an update takes effect on
-# the next scheduled scan without needing a PR to trip it.
+# Branch pushes, pull requests and manual runs of dependency-integrity-check.yml
+# exercise the lists against the whole tree.
 KNOWN_BAD_PACKAGE_RE='(mistralai|guardrails-ai|lightning|@tanstack/|@mistralai/|@uipath/|@opensearch-project/|@squawk/|@tallyui/|@beproduct/|@draftauth/|@dirigible-ai/|@ml-toolkit-ts/|@supersurkhet/|agentwork-cli|cmux-agent-mcp|cross-stitch|git-branch-selector|git-git-git|nextmove-mcp|safe-action|ts-dna|wot-api|finch-rust|sha-rust|finch_cli_rust|finch-rst|sha-rst)'
 SHAI_HULUD_IOC_RE='(shai[-_ ]?hulud|router_init\.js|router_runtime\.js|setup\.mjs|setup_bun\.js|bun_environment\.js|transformers\.pyz|git-tanstack\.com|api\.masscan\.cloud|getsession\.org|filev2\.getsession|gh-token-monitor|IfYouRevokeThisTokenItWillWipeTheComputerOfTheOwner|shai-hulud-workflow)'
 
